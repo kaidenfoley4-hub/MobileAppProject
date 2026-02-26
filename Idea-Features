@@ -1,15 +1,20 @@
 Firstly this would be a calendar and day planner app
 
 Currently the ideas for features include
-Import & Export to outlook & Google Calendar
 Setting up calendar with clickable events
-Reminders with notifications
-Tag search through the events for a particular day
-Widget for home screen
-Import timetable
-Dark mode / Light mode switch
-Assignment / Deadline Tracker & Exam Countdown
 Daily to do list
+Reminders with notifications
+Dark mode / Light mode switch
+Setup different lists of tasks
+Setup a series of tasks e.g. one that happens every friday etc.
 Smart Conflict Detection
-Priority Levels
+Export to outlook
+Assignment / Deadline Tracker & Exam Countdown
+Widget for home screen
+Tag search through the events for a particular day
+Import from outlook
+Export to Google Calendar
+Import from Google Calendar
 We will check if these count as features then add them to the Trello
+
+Priority levels
