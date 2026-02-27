@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello Kaiden's World! \nHello William's World! \n Hello Zhuoya's World!"
+        android:text="Hello Kaiden's World! \nHello William's World! \n Hello Zhuoya's World!\nHello Yiwen's World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
