@@ -21,16 +21,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5d697e8-ff3f-4005-bb76-6d22bd667b11" name="Changes" comment="Removing the test files from the project &#10;&#10;Changed the phone to pixel 6">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/CalendarActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_calendar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-    </list>
+    <list default="true" id="c5d697e8-ff3f-4005-bb76-6d22bd667b11" name="Changes" comment="Set up Calendar with Clickable Events" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -212,7 +203,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772201162041</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Set up Calendar with Clickable Events">
+      <option name="closed" value="true" />
+      <created>1772549543042</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1772549543042</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -244,7 +243,8 @@
     <MESSAGE value="I have just wrote a document with Ideas me and William came up with last week and I will check if they are features in my lab from 13:00-15:00 today" />
     <MESSAGE value="It seems I may have messed something up with ignoring the .idea folder it should work now and technically ignoring the whole .idea folder isn't standard practice anymore so I have added a ToDo to the Trello board for updating the .gitignore" />
     <MESSAGE value="Removing the test files from the project &#10;&#10;Changed the phone to pixel 6" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removing the test files from the project &#10;&#10;Changed the phone to pixel 6" />
+    <MESSAGE value="Set up Calendar with Clickable Events" />
+    <option name="LAST_COMMIT_MESSAGE" value="Set up Calendar with Clickable Events" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
