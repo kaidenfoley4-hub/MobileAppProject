@@ -8,12 +8,21 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello Kaiden's World! \nHello William's World! \n Hello Zhuoya's World!\nHello Yiwen's World!"
+        android:text="Hello Kaiden's World! \nHello William's World! \nHello Zhuoya's World! \nHello Yiwen's World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <Button
+        android:id="@+id/openCalendarBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Calendar"
+        app:layout_constraintTop_toBottomOf="@id/nameText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
