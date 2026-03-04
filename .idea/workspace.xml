@@ -5,12 +5,12 @@
       <config />
     </shared>
     <layouts>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_calendar.xml">
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
         <config>
           <theme>@style/Theme.MyApplication</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_todo.xml">
         <config>
           <theme>@style/Theme.MyApplication</theme>
         </config>
@@ -21,7 +21,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5d697e8-ff3f-4005-bb76-6d22bd667b11" name="Changes" comment="Set up Calendar with Clickable Events" />
+    <list default="true" id="c5d697e8-ff3f-4005-bb76-6d22bd667b11" name="Changes" comment="It seems I may have messed something up with ignoring the .idea folder it should work now and technically ignoring the whole .idea folder isn't standard practice anymore so I have added a ToDo to the Trello board for updating the .gitignore">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/TodoActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_todo.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,7 +37,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\29674\.android\avd\Pixel_6.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\35348\.android\avd\Pixel_5_API_33.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -48,12 +55,9 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;git@github.com:kaidenfoley4-hub/MobileAppProject.git&quot;,
-    &quot;accountId&quot;: &quot;6c292dde-f45b-4d5d-8279-18f10e9b5636&quot;
+    &quot;accountId&quot;: &quot;4316a756-62a6-4a02-a380-bf03da2e3a19&quot;
   }
 }</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -76,11 +80,6 @@
     &quot;last_opened_file_path&quot;: &quot;C:/Semester 6/CS4048_Mobile_App_Dev/MobileAppProject&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="android.template.1052032729">
-      <recent name="com.example.myapplication" />
-    </key>
-  </component>
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="My_Application.app" />
@@ -195,23 +194,7 @@
       <option name="project" value="LOCAL" />
       <updated>1771247771313</updated>
     </task>
-    <task id="LOCAL-00005" summary="Removing the test files from the project &#10;&#10;Changed the phone to pixel 6">
-      <option name="closed" value="true" />
-      <created>1772201162041</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1772201162041</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Set up Calendar with Clickable Events">
-      <option name="closed" value="true" />
-      <created>1772549543042</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1772549543042</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -242,21 +225,19 @@
     <MESSAGE value="I have changed the git to ignore the .idea file as that should change with each session and isn't necessary for the project&#10;&#10;To view this change check the .gitignore file" />
     <MESSAGE value="I have just wrote a document with Ideas me and William came up with last week and I will check if they are features in my lab from 13:00-15:00 today" />
     <MESSAGE value="It seems I may have messed something up with ignoring the .idea folder it should work now and technically ignoring the whole .idea folder isn't standard practice anymore so I have added a ToDo to the Trello board for updating the .gitignore" />
-    <MESSAGE value="Removing the test files from the project &#10;&#10;Changed the phone to pixel 6" />
-    <MESSAGE value="Set up Calendar with Clickable Events" />
-    <option name="LAST_COMMIT_MESSAGE" value="Set up Calendar with Clickable Events" />
+    <option name="LAST_COMMIT_MESSAGE" value="It seems I may have messed something up with ignoring the .idea folder it should work now and technically ignoring the whole .idea folder isn't standard practice anymore so I have added a ToDo to the Trello board for updating the .gitignore" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.example.myapplication">
           <value>
-            <CheckInfo lastCheckTimestamp="1772547502778" />
+            <CheckInfo lastCheckTimestamp="1772654183946" />
           </value>
         </entry>
         <entry key="com.example.myapplication.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1772547502777" />
+            <CheckInfo lastCheckTimestamp="1772654183945" />
           </value>
         </entry>
       </map>
