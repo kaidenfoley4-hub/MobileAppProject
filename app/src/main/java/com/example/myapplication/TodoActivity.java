@@ -1,26 +1,32 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.content.SharedPreferences;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class TodoActivity extends AppCompatActivity {
 
-    private static final String PREFS_NAME = "todo_prefs";
-    private static final String KEY_TASKS = "tasks_json";
-
     private EditText editTask;
-    private ArrayList<String> tasks;
+    private TextView tvSelectedDate;
+    private TaskViewModel taskViewModel;
     private ArrayAdapter<String> adapter;
+    private List<Task> currentTasks = new ArrayList<>();
+    private long selectedDateMillis = -1;  // stores the picked date and -1 means no date is picked yet
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,52 +34,86 @@ public class TodoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_todo);
 
         editTask = findViewById(R.id.editTask);
+        tvSelectedDate = findViewById(R.id.tvSelectedDate);
         ListView listView = findViewById(R.id.listViewTasks);
+        Button btnPickDate = findViewById(R.id.btnPickDate);
+        Button btnAdd = findViewById(R.id.btnAdd);
 
-        tasks = loadTasks();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         listView.setAdapter(adapter);
 
-        findViewById(R.id.btnAdd).setOnClickListener(v -> {
-            String text = editTask.getText().toString().trim();
-            if (!text.isEmpty()) {
-                tasks.add(text);
-                adapter.notifyDataSetChanged();
-                editTask.setText("");
-                saveTasks();
+        // any time the task list changes in the database this runs automatically
+        taskViewModel.getAllTasks().observe(this, tasks -> {
+            currentTasks = tasks;
+            adapter.clear();
+            for (Task t : tasks) {
+
+                String dateStr = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        .format(new Date(t.startTime));
+                adapter.add(t.title + " — " + dateStr);
             }
-        });
-
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            tasks.remove(position);
             adapter.notifyDataSetChanged();
-            saveTasks();
         });
 
-        editTask.setOnLongClickListener(v -> {
+
+        btnPickDate.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+            // set to noon so that the wrong day cannot be accidentally chosen by timezone offsets
+            new DatePickerDialog(this, (view, year, month, day) -> {
+
+                cal.set(year, month, day, 12, 0, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                selectedDateMillis = cal.getTimeInMillis();
+
+
+                String dateStr = day + "/" + (month + 1) + "/" + year;
+                tvSelectedDate.setText("Due: " + dateStr);
+
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+
+        btnAdd.setOnClickListener(v -> {
+            String title = editTask.getText().toString().trim();
+
+            if (title.isEmpty()) {
+                Toast.makeText(this, "Please enter a task title", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (selectedDateMillis == -1) {
+                Toast.makeText(this, "Please pick a due date", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // endtime defaults to 1 hour after start
+            // this will be customizable later by the user
+            Task task = new Task(title, "", "", selectedDateMillis, selectedDateMillis + 3600000);
+            taskViewModel.insert(task);
+
+            // clear the form to allow a new task to be created
             editTask.setText("");
-            return true;
+            tvSelectedDate.setText("No date selected");
+            selectedDateMillis = -1;
         });
-    }
 
-    private void saveTasks() {
-        JSONArray arr = new JSONArray();
-        for (String t : tasks) arr.put(t);
+        // currently tap to delete, can be changed to a long press or completion later
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Task taskToDelete = currentTasks.get(position);
+            taskViewModel.delete(taskToDelete);
+            Toast.makeText(this, "Task deleted", Toast.LENGTH_SHORT).show();
+        });
 
-        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        sp.edit().putString(KEY_TASKS, arr.toString()).apply();
-    }
+        Button btnExport = findViewById(R.id.btnExport);
 
-    private ArrayList<String> loadTasks() {
-        SharedPreferences sp = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        String json = sp.getString(KEY_TASKS, "[]");
-
-        ArrayList<String> list = new ArrayList<>();
-        try {
-            JSONArray arr = new JSONArray(json);
-            for (int i = 0; i < arr.length(); i++) list.add(arr.getString(i));
-        } catch (JSONException e) {
-        }
-        return list;
+        btnExport.setOnClickListener(v -> {
+            if (currentTasks == null || currentTasks.isEmpty()) {
+                Toast.makeText(this, "No tasks to export", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            IcsExporter.exportToFile(this, currentTasks);
+        });
     }
 }

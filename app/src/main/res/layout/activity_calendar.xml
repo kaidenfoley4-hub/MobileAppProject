@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/eventTitle"
+        android:id="@+id/tvSelectedDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Events:"
-        android:textSize="18sp"
-        android:paddingTop="20dp"/>
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:text="Tap a date to see tasks" />
+
+    <ListView
+        android:id="@+id/listViewTasks"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/eventText"
+        android:id="@+id/tvNoTasks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select a date to see events"
-        android:textSize="16sp"/>
+        android:padding="16dp"
+        android:text="No tasks for this date"
+        android:visibility="gone" />
 
 </LinearLayout>

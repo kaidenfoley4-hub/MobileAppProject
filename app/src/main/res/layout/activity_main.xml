@@ -7,26 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/nameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello Kaiden's World! \nHello William's World! \nHello Zhuoya's World! \nHello Yiwen's World!"
-        app:layout_constraintBottom_toTopOf="@id/openCalendarBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="40dp"/>
-
     <Button
         android:id="@+id/openCalendarBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Open Calendar"
-        app:layout_constraintTop_toBottomOf="@id/nameText"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp"/>
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="127dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/openTodoBtn"
