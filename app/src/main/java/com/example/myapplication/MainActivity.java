@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.content.Intent;
 
+import com.google.android.material.card.MaterialCardView;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -13,18 +15,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Open Calendar button
-        Button openBtn = findViewById(R.id.openCalendarBtn);
-
-        openBtn.setOnClickListener(v -> {
+        MaterialCardView cardCalendar = findViewById(R.id.cardCalendar);
+        cardCalendar.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
             startActivity(intent);
         });
 
-        // Open ToDo List button
-        Button todoBtn = findViewById(R.id.openTodoBtn);
-
-        todoBtn.setOnClickListener(v -> {
+        MaterialCardView cardTodo = findViewById(R.id.cardTodo);
+        cardTodo.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, TodoActivity.class);
             startActivity(intent);
         });
