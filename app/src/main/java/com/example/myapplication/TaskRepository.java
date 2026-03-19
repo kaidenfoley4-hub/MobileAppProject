@@ -35,4 +35,8 @@ public class TaskRepository {
     public void update(Task task) {
         Executors.newSingleThreadExecutor().execute(() -> taskDao.update(task));
     }
+
+    public LiveData<Task> getTaskById(int taskId) {
+        return taskDao.getTaskById(taskId);
+    }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -117,11 +118,13 @@ public class TodoActivity extends AppCompatActivity {
             selectedDateMillis = -1;
         });
 
-        // currently tap to delete, can be changed to a long press or completion later
+        // tap a task to edit it instead of deleting it
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Task taskToDelete = currentTasks.get(position);
-            taskViewModel.delete(taskToDelete);
-            Toast.makeText(this, "Task deleted", Toast.LENGTH_SHORT).show();
+            Task taskToEdit = currentTasks.get(position);
+            Intent intent = new Intent(TodoActivity.this, EditActivity.class);
+            // pass the task id so EditTaskActivity knows which task to load
+            intent.putExtra("TASK_ID", taskToEdit.id);
+            startActivity(intent);
         });
 
         // should probably be moved to the top with the other views
@@ -135,6 +138,10 @@ public class TodoActivity extends AppCompatActivity {
                 return;
             }
             IcsExporter.exportToFile(this, currentTasks);
+
+
         });
     }
+
+
 }

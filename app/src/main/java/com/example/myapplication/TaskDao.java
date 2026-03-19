@@ -29,4 +29,8 @@ public interface TaskDao {
     // pulls everything for the todo list, oldest tasks show up first
     @Query("SELECT * FROM tasks ORDER BY startTime ASC")
     LiveData<List<Task>> getAllTasks();
+
+    // fetch a single task by its id for the edit screen
+    @Query("SELECT * FROM tasks WHERE id = :taskId")
+    LiveData<Task> getTaskById(int taskId);
 }

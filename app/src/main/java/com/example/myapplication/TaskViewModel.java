@@ -35,4 +35,8 @@ public class TaskViewModel extends AndroidViewModel {
     public void update(Task task) {
         repository.update(task);
     }
+
+    public LiveData<Task> getTaskById(int taskId) {
+        return repository.getTaskById(taskId);
+    }
 }

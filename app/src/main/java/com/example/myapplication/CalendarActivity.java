@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -70,11 +71,12 @@ public class CalendarActivity extends AppCompatActivity {
             tvSelectedDate.setText(dateStr);
         });
 
-        // only deletes a task that is tapped for now, will be marking complete later also
+        // tap a task to edit it
         listViewTasks.setOnItemClickListener((parent, view, position, id) -> {
-            Task task = currentTasks.get(position);
-            taskViewModel.delete(task);
-            Toast.makeText(this, "Task removed", Toast.LENGTH_SHORT).show();
+            Task taskToEdit = currentTasks.get(position);
+            Intent intent = new Intent(CalendarActivity.this, EditActivity.class);
+            intent.putExtra("TASK_ID", taskToEdit.id);
+            startActivity(intent);
         });
     }
 
