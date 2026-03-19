@@ -148,10 +148,6 @@ Intent is how android knows you have the intent to open the other screen, and th
 The listeners here watch for clicks on the two cards.
 
 ## CalendarActivity
-This screen does two jobs, it shows a calendar and allows you to tap on a date to see its tasks.
-It immediately selects today's data rather than being empty upon opening by using:
-```loadTasksForCalendarDate(Calendar.getInstance());```
-
 
 ## TodoActivity
 
