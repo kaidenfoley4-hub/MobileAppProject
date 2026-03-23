@@ -13,6 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +26,7 @@ import java.util.Locale;
 public class TodoActivity extends AppCompatActivity {
 
     // for the task title
-    private EditText editTask;
+    private TextInputEditText editTask;
     // date user picked
     private TextView tvSelectedDate;
     // connection to the database layer
@@ -45,7 +48,7 @@ public class TodoActivity extends AppCompatActivity {
         editTask = findViewById(R.id.editTask);
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
         ListView listView = findViewById(R.id.listViewTasks);
-        Button btnPickDate = findViewById(R.id.btnPickDate);
+        MaterialCardView btnPickDate = findViewById(R.id.btnPickDate);
         Button btnAdd = findViewById(R.id.btnAdd);
 
         // explained in calendarActivity

@@ -1,9 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- tells android to make the status bar transparent so it
+             takes the colour of whatever is behind it -->
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <!-- makes the status bar icons dark on light backgrounds
+             and light on dark backgrounds automatically -->
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />
+
 </resources>
+
