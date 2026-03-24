@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- same outer structure as the main page -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,7 +25,6 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- scrollable so keyboard doesnt push things off screen -->
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -37,15 +35,14 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- title input card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
+                    style="@style/Widget.Material3.CardView.Filled"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp"
-                    style="@style/Widget.Material3.CardView.Filled">
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -54,7 +51,6 @@
                         android:gravity="center_vertical"
                         android:padding="20dp">
 
-                        <!-- pencil icon -->
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="52dp"
                             android:layout_height="52dp"
@@ -72,7 +68,6 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <!-- outlined text field matching edit task screen -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -92,7 +87,6 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- tapping this card opens the date picker -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btnPickDate"
                     android:layout_width="match_parent"
@@ -100,10 +94,10 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
+                    style="@style/Widget.Material3.CardView.Filled"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp"
-                    style="@style/Widget.Material3.CardView.Filled">
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -112,7 +106,6 @@
                         android:gravity="center_vertical"
                         android:padding="20dp">
 
-                        <!-- calendar icon -->
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="52dp"
                             android:layout_height="52dp"
@@ -141,22 +134,20 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Due Date"
-                                style="?attr/textAppearanceTitleMedium"
-                                android:textColor="?attr/colorOnSurface" />
+                                android:textColor="?attr/colorOnSurface"
+                                style="?attr/textAppearanceTitleMedium" />
 
-                            <!-- updated in Java when a date is picked -->
                             <TextView
                                 android:id="@+id/tvSelectedDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
                                 android:text="No date selected"
-                                style="?attr/textAppearanceBodyMedium"
                                 android:textColor="?attr/colorOnSurfaceVariant"
-                                android:layout_marginTop="2dp" />
+                                style="?attr/textAppearanceBodyMedium" />
 
                         </LinearLayout>
 
-                        <!-- hints to the user that this card is tappable -->
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
@@ -167,35 +158,74 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- add task button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAdd"
+                    style="@style/Widget.Material3.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Add Task"
-                    style="@style/Widget.Material3.Button" />
+                    android:text="Add Task" />
 
-                <!-- export button, secondary style to distinguish from add -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnExport"
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Export to Outlook"
-                    style="@style/Widget.Material3.Button.TonalButton" />
+                    android:text="Export to Outlook" />
 
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
-        <!-- task list sits below the form and fills remaining space -->
-        <ListView
-            android:id="@+id/listViewTasks"
+        <!-- task sections -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:divider="?attr/colorOutlineVariant"
-            android:dividerHeight="1dp" />
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvPendingHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Pending Tasks"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnSurface" />
+
+            <ListView
+                android:id="@+id/listViewPendingTasks"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="?attr/colorOutlineVariant"
+                android:dividerHeight="1dp" />
+
+            <TextView
+                android:id="@+id/tvCompletedHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:text="Completed Tasks"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnSurface" />
+
+            <ListView
+                android:id="@+id/listViewCompletedTasks"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="?attr/colorOutlineVariant"
+                android:dividerHeight="1dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

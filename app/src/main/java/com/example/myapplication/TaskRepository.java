@@ -22,8 +22,20 @@ public class TaskRepository {
         return taskDao.getTasksForDay(start, end);
     }
 
+    public LiveData<List<Task>> getPendingTasks() {
+        return taskDao.getPendingTasks();
+    }
+
+    public LiveData<List<Task>> getCompletedTasks() {
+        return taskDao.getCompletedTasks();
+    }
+
+    public LiveData<Task> getTaskById(int taskId) {
+        return taskDao.getTaskById(taskId);
+    }
+
     // Room doesn't allow database writes on the main thread
-    // so these three run on a background thread instead
+    // so these run on a background thread instead
     public void insert(Task task) {
         Executors.newSingleThreadExecutor().execute(() -> taskDao.insert(task));
     }
@@ -34,9 +46,5 @@ public class TaskRepository {
 
     public void update(Task task) {
         Executors.newSingleThreadExecutor().execute(() -> taskDao.update(task));
-    }
-
-    public LiveData<Task> getTaskById(int taskId) {
-        return taskDao.getTaskById(taskId);
     }
 }
