@@ -44,6 +44,13 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         TextView textTaskTitle = convertView.findViewById(R.id.textTaskTitle);
         TextView textTaskDate = convertView.findViewById(R.id.textTaskDate);
 
+        // Ensure the checkbox does not steal focus from the list item.
+        // This allows the list item's click used for editing to be received while
+        // the checkbox still handles marking complete when the checkbox itself is clicked.
+        checkComplete.setFocusable(false);
+        checkComplete.setFocusableInTouchMode(false);
+        checkComplete.setClickable(true);
+
         if (task != null) {
             textTaskTitle.setText(task.title);
 
