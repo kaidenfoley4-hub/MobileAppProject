@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -14,14 +15,18 @@ import android.widget.Toast;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class TodoActivity extends AppCompatActivity {
 
     private TextInputEditText editTask;
     private TextView tvSelectedDate;
+    private TextView tvSelectedStartTime;
+    private TextView tvSelectedEndTime;
     private TaskViewModel taskViewModel;
 
     private TaskAdapter pendingAdapter;
@@ -31,7 +36,10 @@ public class TodoActivity extends AppCompatActivity {
     private List<Task> completedTasks = new ArrayList<>();
     private List<Task> currentTasks = new ArrayList<>();
 
+    // -1 means nothing picked yet
     private long selectedDateMillis = -1;
+    private long selectedStartTimeMillis = -1;
+    private long selectedEndTimeMillis = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +48,15 @@ public class TodoActivity extends AppCompatActivity {
 
         editTask = findViewById(R.id.editTask);
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
+        tvSelectedStartTime = findViewById(R.id.tvSelectedStartTime);
+        tvSelectedEndTime = findViewById(R.id.tvSelectedEndTime);
 
         ListView pendingListView = findViewById(R.id.listViewPendingTasks);
         ListView completedListView = findViewById(R.id.listViewCompletedTasks);
 
         MaterialCardView btnPickDate = findViewById(R.id.btnPickDate);
+        MaterialCardView cardPickStartTime = findViewById(R.id.cardPickStartTime);
+        MaterialCardView cardPickEndTime = findViewById(R.id.cardPickEndTime);
         Button btnAdd = findViewById(R.id.btnAdd);
         Button btnExport = findViewById(R.id.btnExport);
 
@@ -81,22 +93,80 @@ public class TodoActivity extends AppCompatActivity {
             currentTasks = tasks;
         });
 
+        // date picker — must be picked before time pickers are allowed
         btnPickDate.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
-
             new DatePickerDialog(this, (view, year, month, day) -> {
-                cal.set(year, month, day, 12, 0, 0);
+                // set to midnight as base — time will be added separately
+                cal.set(year, month, day, 0, 0, 0);
                 cal.set(Calendar.MILLISECOND, 0);
-
                 selectedDateMillis = cal.getTimeInMillis();
 
                 String dateStr = day + "/" + (month + 1) + "/" + year;
                 tvSelectedDate.setText("Due: " + dateStr);
 
-            },
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
+                // reset times when date changes so stale times dont carry over
+                selectedStartTimeMillis = -1;
+                selectedEndTimeMillis = -1;
+                tvSelectedStartTime.setText("No time selected");
+                tvSelectedEndTime.setText("No time selected");
+
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        // start time picker — blocked until a date is chosen
+        cardPickStartTime.setOnClickListener(v -> {
+            if (selectedDateMillis == -1) {
+                Toast.makeText(this, "Please pick a date first", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Calendar cal = Calendar.getInstance();
+            new TimePickerDialog(this, (view, hour, minute) -> {
+                // combine the selected date with the chosen time
+                Calendar combined = Calendar.getInstance();
+                combined.setTimeInMillis(selectedDateMillis);
+                combined.set(Calendar.HOUR_OF_DAY, hour);
+                combined.set(Calendar.MINUTE, minute);
+                combined.set(Calendar.SECOND, 0);
+                combined.set(Calendar.MILLISECOND, 0);
+                selectedStartTimeMillis = combined.getTimeInMillis();
+
+                String timeStr = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                tvSelectedStartTime.setText(timeStr);
+
+            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show();
+        });
+
+        // end time picker — blocked until a start time is chosen
+        cardPickEndTime.setOnClickListener(v -> {
+            if (selectedStartTimeMillis == -1) {
+                Toast.makeText(this, "Please pick a start time first", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Calendar cal = Calendar.getInstance();
+            new TimePickerDialog(this, (view, hour, minute) -> {
+                Calendar combined = Calendar.getInstance();
+                combined.setTimeInMillis(selectedDateMillis);
+                combined.set(Calendar.HOUR_OF_DAY, hour);
+                combined.set(Calendar.MINUTE, minute);
+                combined.set(Calendar.SECOND, 0);
+                combined.set(Calendar.MILLISECOND, 0);
+                selectedEndTimeMillis = combined.getTimeInMillis();
+
+                // make sure end time is after start time
+                if (selectedEndTimeMillis <= selectedStartTimeMillis) {
+                    Toast.makeText(this, "End time must be after start time",
+                            Toast.LENGTH_SHORT).show();
+                    selectedEndTimeMillis = -1;
+                    tvSelectedEndTime.setText("No time selected");
+                    return;
+                }
+
+                String timeStr = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+                tvSelectedEndTime.setText(timeStr);
+
+            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show();
         });
 
         btnAdd.setOnClickListener(v -> {
@@ -106,18 +176,31 @@ public class TodoActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter a task title", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             if (selectedDateMillis == -1) {
                 Toast.makeText(this, "Please pick a due date", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (selectedStartTimeMillis == -1) {
+                Toast.makeText(this, "Please pick a start time", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            Task task = new Task(title, "", "", selectedDateMillis, selectedDateMillis + 3600000);
+            // if end time not selected default to start 1 hour after
+            long endMillis = selectedEndTimeMillis != -1
+                    ? selectedEndTimeMillis
+                    : selectedStartTimeMillis + 3600000;
+
+            Task task = new Task(title, "", "", selectedStartTimeMillis, endMillis);
             taskViewModel.insert(task);
 
+            // reset the form
             editTask.setText("");
             tvSelectedDate.setText("No date selected");
+            tvSelectedStartTime.setText("No time selected");
+            tvSelectedEndTime.setText("No time selected");
             selectedDateMillis = -1;
+            selectedStartTimeMillis = -1;
+            selectedEndTimeMillis = -1;
         });
 
         pendingListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -139,7 +222,6 @@ public class TodoActivity extends AppCompatActivity {
                 Toast.makeText(this, "No tasks to export", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             IcsExporter.exportToFile(this, currentTasks);
         });
     }
