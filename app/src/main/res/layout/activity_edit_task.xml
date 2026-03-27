@@ -17,7 +17,8 @@
             android:layout_height="?attr/actionBarSize"
             app:title="Edit Task"
             app:titleTextAppearance="?attr/textAppearanceTitleLarge"
-            app:navigationIcon="@drawable/ic_chevron_right"/>
+            app:navigationIcon="@drawable/ic_chevron_right"
+            app:navigationIconTint="?attr/colorOnSurface"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_chevron_right"
+            app:navigationIconTint="?attr/colorOnSurface"
             app:title="Notifications"
             app:titleTextAppearance="?attr/textAppearanceTitleLarge" />
 
