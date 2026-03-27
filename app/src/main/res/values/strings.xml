@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">To-Do Planner</string>
     <string name="task_notification_channel_name">Task reminders</string>
     <string name="task_notification_channel_desc">Alerts you before your tasks start</string>
     <string name="task_notification_default_title">Upcoming task</string>
