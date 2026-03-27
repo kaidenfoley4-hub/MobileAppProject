@@ -20,7 +20,8 @@ public class NotificationPreferenceManager {
 
     public static boolean areNotificationsEnabled(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getBoolean(KEY_ENABLED, true);
+        // first-run default is off; user explicitly enables reminders in settings
+        return prefs.getBoolean(KEY_ENABLED, false);
     }
 
     public static void setLeadTimeMinutes(Context context, int minutes) {
