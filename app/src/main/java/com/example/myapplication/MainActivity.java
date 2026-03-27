@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
         // wire up the toolbar so the menu shows
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, NotificationSettingsActivity.class);
+            startActivity(intent);
+        });
 
         MaterialCardView cardCalendar = findViewById(R.id.cardCalendar);
         cardCalendar.setOnClickListener(v -> {
