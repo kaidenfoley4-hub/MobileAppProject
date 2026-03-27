@@ -7,7 +7,10 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +83,7 @@ public class TodoActivity extends AppCompatActivity {
             pendingAdapter.clear();
             pendingAdapter.addAll(tasks);
             pendingAdapter.notifyDataSetChanged();
+            setListViewHeightBasedOnChildren(pendingListView);
         });
 
         taskViewModel.getCompletedTasks().observe(this, tasks -> {
@@ -87,6 +91,7 @@ public class TodoActivity extends AppCompatActivity {
             completedAdapter.clear();
             completedAdapter.addAll(tasks);
             completedAdapter.notifyDataSetChanged();
+            setListViewHeightBasedOnChildren(completedListView);
         });
 
         taskViewModel.getAllTasks().observe(this, tasks -> {
@@ -225,5 +230,33 @@ public class TodoActivity extends AppCompatActivity {
             }
             IcsExporter.exportToFile(this, currentTasks);
         });
+    }
+
+    // ListViews are inside a NestedScrollView, so we expand them to full content height.
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            if (listItem.getLayoutParams() == null) {
+                listItem.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                ));
+            }
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * Math.max(listAdapter.getCount() - 1, 0));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }
