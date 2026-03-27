@@ -212,6 +212,7 @@ public class EditActivity extends AppCompatActivity {
             currentTask.title = title;
             currentTask.startTime = selectedStartTimeMillis;
             currentTask.endTime = resolvedEndTime;
+            // TaskViewModel triggers TaskRepository, which re-schedules alarms with the new window
             taskViewModel.update(currentTask);
 
             Toast.makeText(this, "Task saved", Toast.LENGTH_SHORT).show();

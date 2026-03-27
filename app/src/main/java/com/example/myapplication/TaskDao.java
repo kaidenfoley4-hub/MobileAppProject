@@ -13,7 +13,7 @@ import java.util.List;
 public interface TaskDao {
 
     @Insert
-    void insert(Task task);
+    long insert(Task task);
 
     @Delete
     void delete(Task task);
@@ -41,4 +41,8 @@ public interface TaskDao {
     // fetch a single task by its id for the edit screen
     @Query("SELECT * FROM tasks WHERE id = :taskId")
     LiveData<Task> getTaskById(int taskId);
+
+    // used by background jobs that cannot observe LiveData
+    @Query("SELECT * FROM tasks")
+    List<Task> getAllTasksSnapshot();
 }

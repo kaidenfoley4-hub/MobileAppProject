@@ -203,6 +203,7 @@ public class TodoActivity extends AppCompatActivity {
             selectedEndTimeMillis = -1;
         });
 
+        // tapping anywhere on the row (not just the checkbox) opens edit so users can tweak times
         pendingListView.setOnItemClickListener((parent, view, position, id) -> {
             Task taskToEdit = pendingTasks.get(position);
             Intent intent = new Intent(TodoActivity.this, EditActivity.class);

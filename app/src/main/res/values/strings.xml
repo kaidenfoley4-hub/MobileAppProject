@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="task_notification_channel_name">Task reminders</string>
+    <string name="task_notification_channel_desc">Alerts you before your tasks start</string>
+    <string name="task_notification_default_title">Upcoming task</string>
+    <string name="task_notification_body">Starts at %1$s</string>
+    <string name="task_notification_fallback_time">the scheduled time</string>
 </resources>

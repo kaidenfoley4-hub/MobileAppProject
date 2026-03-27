@@ -46,6 +46,135 @@
                 android:textColor="?attr/colorOnSurfaceVariant"
                 style="?attr/textAppearanceBodyMedium" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                style="@style/Widget.Material3.CardView.Filled">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Task notifications"
+                            android:textColor="?attr/colorOnSurface"
+                            style="?attr/textAppearanceTitleMedium" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Receive reminders before tasks start"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:layout_marginTop="2dp"
+                            style="?attr/textAppearanceBodyMedium" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchNotifications"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLeadTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                style="@style/Widget.Material3.CardView.Filled">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reminder timing"
+                        android:textColor="?attr/colorOnSurface"
+                        style="?attr/textAppearanceTitleMedium" />
+
+                    <TextView
+                        android:id="@+id/tvLeadTimeSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Selected time"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        style="?attr/textAppearanceBodyMedium" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/groupLeadTimes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:padding="4dp"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipLead15"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="15 min" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipLead30"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="30 min" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipLead60"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 hr" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipLead360"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="6 hr" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipLead1440"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="24 hr" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

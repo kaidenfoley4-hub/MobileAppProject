@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> {
+            // top-left bell lets the user change their notification settings
             Intent intent = new Intent(MainActivity.this, NotificationSettingsActivity.class);
             startActivity(intent);
         });
