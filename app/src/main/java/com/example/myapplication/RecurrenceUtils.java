@@ -148,7 +148,8 @@ public final class RecurrenceUtils {
                 end,
                 base.isCompleted,
                 base.uid,
-                base.folder,""
+                base.folder,
+                base.tags
         );
         occurrence.id = base.id;
         occurrence.recurrenceFrequency = base.recurrenceFrequency;
