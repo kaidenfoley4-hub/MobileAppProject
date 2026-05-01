@@ -4,11 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -329,5 +330,36 @@ public class TodoActivity extends AppCompatActivity {
         params.height = totalHeight + (listView.getDividerHeight() * Math.max(listAdapter.getCount() - 1, 0));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != REQUEST_OPEN_RESULT || resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        }
+
+        Uri uri = data.getData();
+        if (uri == null) {
+            Toast.makeText(this, "Unable to read the selected file", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            List<Task> importedTasks = IcsImporter.importFromUri(this, uri);
+            if (importedTasks.isEmpty()) {
+                Toast.makeText(this, "No tasks found in the selected file", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            for (Task task : importedTasks) {
+                taskViewModel.insert(task);
+            }
+
+            Toast.makeText(this, "Imported " + importedTasks.size() + " tasks", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to import tasks", Toast.LENGTH_SHORT).show();
+        }
     }
 }
