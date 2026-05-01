@@ -53,4 +53,13 @@ public interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE folder = :folder")
     List<Task> getTasksSnapshotByFolder(String folder);
+
+    @Query("SELECT * FROM tasks WHERE tags LIKE '%' || :tag || '%' ORDER BY startTime ASC")
+    LiveData<List<Task>> searchTasksByTag(String tag);
+
+    @Query("SELECT * FROM tasks WHERE title LIKE '%' || :keyword || '%' " +
+            "OR description LIKE '%' || :keyword || '%' " +
+            "OR tags LIKE '%' || :keyword || '%' " +
+            "ORDER BY startTime ASC")
+    LiveData<List<Task>> searchTasks(String keyword);
 }

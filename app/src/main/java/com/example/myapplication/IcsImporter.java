@@ -130,7 +130,7 @@ public class IcsImporter {
         }
 
         boolean isCompleted = "COMPLETED".equalsIgnoreCase(props.get("STATUS"));
-        Task task = new Task(title, description, location, start, end, isCompleted, uid, "General");
+        Task task = new Task(title, description, location, start, end, isCompleted, uid, "General","");
 
         RecurrenceRule rule = parseRrule(props.get("RRULE"));
         if (rule != null && !RecurrenceUtils.FREQ_NONE.equals(rule.frequency)) {

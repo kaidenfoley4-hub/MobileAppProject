@@ -20,6 +20,7 @@ public class Task {
 
 
     public String folder;
+    public String tags;
 
     public String recurrenceFrequency;
     public int recurrenceInterval;
@@ -27,7 +28,7 @@ public class Task {
 
 
     public Task(String title, String description, String location,
-                long startTime, long endTime, boolean isCompleted, String uid, String folder) {
+                long startTime, long endTime, boolean isCompleted, String uid, String folder, String tags) {
         this.title = title;
         this.description = description;
         this.location = location;
@@ -36,6 +37,7 @@ public class Task {
         this.isCompleted = isCompleted;
         this.uid = uid;
         this.folder = folder;
+        this.tags = tags;
         this.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
         this.recurrenceInterval = 1;
         this.recurrenceEndTime = -1L;
@@ -53,6 +55,7 @@ public class Task {
         this.isCompleted = false;
         this.uid = java.util.UUID.randomUUID().toString();
         this.folder = folder;
+        this.tags = "";
         this.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
         this.recurrenceInterval = 1;
         this.recurrenceEndTime = -1L;
@@ -70,6 +73,7 @@ public class Task {
         this.isCompleted = false;
         this.uid = java.util.UUID.randomUUID().toString();
         this.folder = "General";
+        this.tags = "";
         this.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
         this.recurrenceInterval = 1;
         this.recurrenceEndTime = -1L;
@@ -98,5 +102,13 @@ public class Task {
 
     public void setFolder(String folder) {
         this.folder = folder;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

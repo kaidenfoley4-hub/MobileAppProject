@@ -10,6 +10,8 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,6 +35,8 @@ import java.util.concurrent.TimeUnit;
 public class TodoActivity extends AppCompatActivity {
 
     private TextInputEditText editTask;
+    private TextInputEditText editTaskTags;
+    private TextInputEditText editSearch;
     private TextView tvSelectedDate;
     private TextView tvSelectedStartTime;
     private TextView tvSelectedEndTime;
@@ -48,6 +52,10 @@ public class TodoActivity extends AppCompatActivity {
     private List<Task> completedTasks = new ArrayList<>();
     private List<Task> currentTasks = new ArrayList<>();
 
+    // 保留从数据库取出的全量数据，搜索时基于它过滤
+    private List<Task> allPendingFromDb = new ArrayList<>();
+    private List<Task> allCompletedFromDb = new ArrayList<>();
+
     private LiveData<List<Task>> pendingTasksLiveData;
     private LiveData<List<Task>> completedTasksLiveData;
     private LiveData<List<Task>> allTasksLiveData;
@@ -60,6 +68,11 @@ public class TodoActivity extends AppCompatActivity {
     private long selectedStartTimeMillis = -1;
     private long selectedEndTimeMillis = -1;
 
+    private String currentSearchKeyword = "";
+
+    private ListView pendingListView;
+    private ListView completedListView;
+
     private static final int REQUEST_OPEN_RESULT = 0;
 
     @Override
@@ -68,6 +81,8 @@ public class TodoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_todo);
 
         editTask = findViewById(R.id.editTask);
+        editTaskTags = findViewById(R.id.editTaskTags);
+        editSearch = findViewById(R.id.editSearch);
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
         tvSelectedStartTime = findViewById(R.id.tvSelectedStartTime);
         tvSelectedEndTime = findViewById(R.id.tvSelectedEndTime);
@@ -75,8 +90,8 @@ public class TodoActivity extends AppCompatActivity {
         spinnerFilterFolder = findViewById(R.id.spinnerFilterFolder);
         spinnerRecurrenceFrequency = findViewById(R.id.spinnerRecurrenceFrequency);
 
-        ListView pendingListView = findViewById(R.id.listViewPendingTasks);
-        ListView completedListView = findViewById(R.id.listViewCompletedTasks);
+        pendingListView = findViewById(R.id.listViewPendingTasks);
+        completedListView = findViewById(R.id.listViewCompletedTasks);
 
         MaterialCardView btnPickDate = findViewById(R.id.btnPickDate);
         MaterialCardView cardPickStartTime = findViewById(R.id.cardPickStartTime);
@@ -102,18 +117,32 @@ public class TodoActivity extends AppCompatActivity {
         pendingListView.setAdapter(pendingAdapter);
         completedListView.setAdapter(completedAdapter);
 
-        observeTasks("All", pendingListView, completedListView);
+        observeTasks("All");
 
         spinnerFilterFolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedFolder = parent.getItemAtPosition(position).toString();
-                observeTasks(selectedFolder, pendingListView, completedListView);
+                observeTasks(selectedFolder);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
+        });
+
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchKeyword = s.toString().trim().toLowerCase(Locale.getDefault());
+                applySearchFilter();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
         spinnerRecurrenceFrequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -198,6 +227,7 @@ public class TodoActivity extends AppCompatActivity {
 
         btnAdd.setOnClickListener(v -> {
             String title = editTask.getText().toString().trim();
+            String tagsInput = editTaskTags.getText().toString().trim();
             String selectedFolder = spinnerTaskFolder.getSelectedItem().toString();
 
             if (title.isEmpty()) {
@@ -220,10 +250,12 @@ public class TodoActivity extends AppCompatActivity {
                     : selectedStartTimeMillis + 3600000;
 
             Task task = new Task(title, "", "", selectedStartTimeMillis, endMillis, selectedFolder);
+            task.tags = normalizeTags(tagsInput);
             applyRecurrenceSelection(task, selectedStartTimeMillis);
             taskViewModel.insert(task);
 
             editTask.setText("");
+            editTaskTags.setText("");
             tvSelectedDate.setText("No date selected");
             tvSelectedStartTime.setText("No time selected");
             tvSelectedEndTime.setText("No time selected");
@@ -258,11 +290,10 @@ public class TodoActivity extends AppCompatActivity {
         });
 
         btnImport.setOnClickListener(v -> {
-            // Request code for selecting a ICS file.
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("text/calendar");
-            startActivityForResult(intent,REQUEST_OPEN_RESULT);
+            startActivityForResult(intent, REQUEST_OPEN_RESULT);
         });
     }
 
@@ -300,7 +331,21 @@ public class TodoActivity extends AppCompatActivity {
         }
     }
 
-    private void observeTasks(String folder, ListView pendingListView, ListView completedListView) {
+    private String normalizeTags(String raw) {
+        if (raw == null || raw.isEmpty()) return "";
+        String[] parts = raw.split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String p : parts) {
+            String t = p.trim();
+            if (!t.isEmpty()) {
+                if (sb.length() > 0) sb.append(",");
+                sb.append(t);
+            }
+        }
+        return sb.toString();
+    }
+
+    private void observeTasks(String folder) {
         if (pendingTasksLiveData != null) {
             pendingTasksLiveData.removeObservers(this);
         }
@@ -326,26 +371,48 @@ public class TodoActivity extends AppCompatActivity {
         pendingTasksLiveData.observe(this, tasks -> {
             long windowStart = System.currentTimeMillis();
             long windowEnd = windowStart + TimeUnit.DAYS.toMillis(7L * RecurrenceUtils.DEFAULT_WINDOW_WEEKS);
-            List<Task> displayTasks = RecurrenceUtils.expandWeeklyOccurrences(tasks, windowStart, windowEnd);
-            pendingTasks = displayTasks;
-            pendingAdapter.clear();
-            pendingAdapter.addAll(displayTasks);
-            pendingAdapter.notifyDataSetChanged();
-            setListViewHeightBasedOnChildren(pendingListView);
+            allPendingFromDb = RecurrenceUtils.expandWeeklyOccurrences(tasks, windowStart, windowEnd);
+            applySearchFilter();
         });
 
         completedTasksLiveData.observe(this, tasks -> {
             long windowStart = System.currentTimeMillis();
             long windowEnd = windowStart + TimeUnit.DAYS.toMillis(7L * RecurrenceUtils.DEFAULT_WINDOW_WEEKS);
-            List<Task> displayTasks = RecurrenceUtils.expandWeeklyOccurrences(tasks, windowStart, windowEnd);
-            completedTasks = displayTasks;
-            completedAdapter.clear();
-            completedAdapter.addAll(displayTasks);
-            completedAdapter.notifyDataSetChanged();
-            setListViewHeightBasedOnChildren(completedListView);
+            allCompletedFromDb = RecurrenceUtils.expandWeeklyOccurrences(tasks, windowStart, windowEnd);
+            applySearchFilter();
         });
 
         allTasksLiveData.observe(this, tasks -> currentTasks = tasks);
+    }
+
+    private void applySearchFilter() {
+        pendingTasks = filterByKeyword(allPendingFromDb, currentSearchKeyword);
+        completedTasks = filterByKeyword(allCompletedFromDb, currentSearchKeyword);
+
+        pendingAdapter.clear();
+        pendingAdapter.addAll(pendingTasks);
+        pendingAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(pendingListView);
+
+        completedAdapter.clear();
+        completedAdapter.addAll(completedTasks);
+        completedAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(completedListView);
+    }
+
+    private List<Task> filterByKeyword(List<Task> source, String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return new ArrayList<>(source);
+        }
+        List<Task> result = new ArrayList<>();
+        for (Task t : source) {
+            String title = t.title == null ? "" : t.title.toLowerCase(Locale.getDefault());
+            String tags = t.tags == null ? "" : t.tags.toLowerCase(Locale.getDefault());
+            if (title.contains(keyword) || tags.contains(keyword)) {
+                result.add(t);
+            }
+        }
+        return result;
     }
 
     private void setListViewHeightBasedOnChildren(ListView listView) {

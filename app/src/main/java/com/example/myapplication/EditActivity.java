@@ -24,6 +24,7 @@ import java.util.Locale;
 public class EditActivity extends AppCompatActivity {
 
     private TextInputEditText editTaskTitle;
+    private TextInputEditText editTaskTags;
     private TextView tvSelectedDate;
     private TextView tvSelectedStartTime;
     private TextView tvSelectedEndTime;
@@ -54,6 +55,7 @@ public class EditActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         editTaskTitle = findViewById(R.id.editTaskTitle);
+        editTaskTags = findViewById(R.id.editTaskTags);
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
         tvSelectedStartTime = findViewById(R.id.tvSelectedStartTime);
         tvSelectedEndTime = findViewById(R.id.tvSelectedEndTime);
@@ -83,6 +85,7 @@ public class EditActivity extends AppCompatActivity {
             if (task != null && currentTask == null) {
                 currentTask = task;
                 editTaskTitle.setText(task.title);
+                editTaskTags.setText(task.tags == null ? "" : task.tags);
                 selectedStartTimeMillis = task.startTime;
                 selectedEndTimeMillis = task.endTime;
                 selectedDateMillis = startOfDay(task.startTime);
@@ -215,6 +218,7 @@ public class EditActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(v -> {
             String title = editTaskTitle.getText().toString().trim();
+            String tagsInput = editTaskTags.getText().toString().trim();
             String selectedFolder = spinnerEditTaskFolder.getSelectedItem().toString();
 
             if (title.isEmpty()) {
@@ -245,6 +249,7 @@ public class EditActivity extends AppCompatActivity {
             currentTask.startTime = selectedStartTimeMillis;
             currentTask.endTime = resolvedEndTime;
             currentTask.folder = selectedFolder;
+            currentTask.tags = normalizeTags(tagsInput);
             applyRecurrenceSelection(currentTask, selectedStartTimeMillis);
 
             taskViewModel.update(currentTask);
@@ -320,6 +325,20 @@ public class EditActivity extends AppCompatActivity {
             task.recurrenceFrequency = RecurrenceUtils.FREQ_MONTHLY;
             task.recurrenceInterval = 1;
         }
+    }
+
+    private String normalizeTags(String raw) {
+        if (raw == null || raw.isEmpty()) return "";
+        String[] parts = raw.split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String p : parts) {
+            String t = p.trim();
+            if (!t.isEmpty()) {
+                if (sb.length() > 0) sb.append(",");
+                sb.append(t);
+            }
+        }
+        return sb.toString();
     }
 
     private void updateDateLabel() {
