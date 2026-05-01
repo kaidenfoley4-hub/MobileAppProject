@@ -56,6 +56,8 @@ public class TodoActivity extends AppCompatActivity {
     private long selectedStartTimeMillis = -1;
     private long selectedEndTimeMillis = -1;
 
+    private static final int REQUEST_OPEN_RESULT = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,8 +244,8 @@ public class TodoActivity extends AppCompatActivity {
             // Request code for selecting a ICS file.
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("downloads/ics");
-            IcsImporter.launch(intent);
+            intent.setType("text/calendar");
+            startActivityForResult(intent,REQUEST_OPEN_RESULT);
         });
     }
 

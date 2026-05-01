@@ -366,14 +366,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Add Task" />
+                    android:text="Add Task"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnExport"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Export to Outlook" />
+                    android:text="Export to Outlook or Google Calendar" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnImport"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Import from Outlook or Google Calendar" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"

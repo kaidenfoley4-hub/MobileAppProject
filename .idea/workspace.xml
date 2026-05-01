@@ -46,13 +46,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5d697e8-ff3f-4005-bb76-6d22bd667b11" name="Changes" comment="It seems I may have messed something up with ignoring the .idea folder it should work now and technically ignoring the whole .idea folder isn't standard practice anymore so I have added a ToDo to the Trello board for updating the .gitignore">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="c5d697e8-ff3f-4005-bb76-6d22bd667b11" name="Changes" comment="Start to open a file for reading the ics and then generating tasks">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/CalendarActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/CalendarActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/TodoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/myapplication/TodoActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_todo.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_todo.xml" afterDir="false" />
     </list>
@@ -64,7 +59,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=8fc998ab9ac2)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\kaide\.android\avd\Medium_Phone.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -256,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771247771313</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Start to open a file for reading the ics and then generating tasks">
+      <option name="closed" value="true" />
+      <created>1777633475425</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1777633475425</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -290,7 +293,8 @@
     <MESSAGE value="I have changed the git to ignore the .idea file as that should change with each session and isn't necessary for the project&#10;&#10;To view this change check the .gitignore file" />
     <MESSAGE value="I have just wrote a document with Ideas me and William came up with last week and I will check if they are features in my lab from 13:00-15:00 today" />
     <MESSAGE value="It seems I may have messed something up with ignoring the .idea folder it should work now and technically ignoring the whole .idea folder isn't standard practice anymore so I have added a ToDo to the Trello board for updating the .gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="It seems I may have messed something up with ignoring the .idea folder it should work now and technically ignoring the whole .idea folder isn't standard practice anymore so I have added a ToDo to the Trello board for updating the .gitignore" />
+    <MESSAGE value="Start to open a file for reading the ics and then generating tasks" />
+    <option name="LAST_COMMIT_MESSAGE" value="Start to open a file for reading the ics and then generating tasks" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
