@@ -21,28 +21,36 @@ public interface TaskDao {
     @Update
     void update(Task task);
 
-    // called when a date is clicked on the calendar
-    // start and end are midnight and 11:59pm of the specific day represented as milliseconds
     @Query("SELECT * FROM tasks WHERE startTime BETWEEN :start AND :end ORDER BY isCompleted ASC, startTime ASC")
     LiveData<List<Task>> getTasksForDay(long start, long end);
 
-    // all tasks: incomplete first, completed after
+    @Query("SELECT * FROM tasks WHERE startTime BETWEEN :start AND :end AND folder = :folder ORDER BY isCompleted ASC, startTime ASC")
+    LiveData<List<Task>> getTasksForDayByFolder(long start, long end, String folder);
+
     @Query("SELECT * FROM tasks ORDER BY isCompleted ASC, startTime ASC")
     LiveData<List<Task>> getAllTasks();
 
-    // pending tasks only
+    @Query("SELECT * FROM tasks WHERE folder = :folder ORDER BY isCompleted ASC, startTime ASC")
+    LiveData<List<Task>> getTasksByFolder(String folder);
+
     @Query("SELECT * FROM tasks WHERE isCompleted = 0 ORDER BY startTime ASC")
     LiveData<List<Task>> getPendingTasks();
 
-    // completed tasks only
+    @Query("SELECT * FROM tasks WHERE isCompleted = 0 AND folder = :folder ORDER BY startTime ASC")
+    LiveData<List<Task>> getPendingTasksByFolder(String folder);
+
     @Query("SELECT * FROM tasks WHERE isCompleted = 1 ORDER BY startTime ASC")
     LiveData<List<Task>> getCompletedTasks();
 
-    // fetch a single task by its id for the edit screen
+    @Query("SELECT * FROM tasks WHERE isCompleted = 1 AND folder = :folder ORDER BY startTime ASC")
+    LiveData<List<Task>> getCompletedTasksByFolder(String folder);
+
     @Query("SELECT * FROM tasks WHERE id = :taskId")
     LiveData<Task> getTaskById(int taskId);
 
-    // used by background jobs that cannot observe LiveData
     @Query("SELECT * FROM tasks")
     List<Task> getAllTasksSnapshot();
+
+    @Query("SELECT * FROM tasks WHERE folder = :folder")
+    List<Task> getTasksSnapshotByFolder(String folder);
 }

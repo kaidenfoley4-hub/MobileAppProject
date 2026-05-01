@@ -24,24 +24,38 @@ public class TaskRepository {
         return taskDao.getAllTasks();
     }
 
+    public LiveData<List<Task>> getTasksByFolder(String folder) {
+        return taskDao.getTasksByFolder(folder);
+    }
+
     public LiveData<List<Task>> getTasksForDay(long start, long end) {
         return taskDao.getTasksForDay(start, end);
+    }
+
+    public LiveData<List<Task>> getTasksForDayByFolder(long start, long end, String folder) {
+        return taskDao.getTasksForDayByFolder(start, end, folder);
     }
 
     public LiveData<List<Task>> getPendingTasks() {
         return taskDao.getPendingTasks();
     }
 
+    public LiveData<List<Task>> getPendingTasksByFolder(String folder) {
+        return taskDao.getPendingTasksByFolder(folder);
+    }
+
     public LiveData<List<Task>> getCompletedTasks() {
         return taskDao.getCompletedTasks();
+    }
+
+    public LiveData<List<Task>> getCompletedTasksByFolder(String folder) {
+        return taskDao.getCompletedTasksByFolder(folder);
     }
 
     public LiveData<Task> getTaskById(int taskId) {
         return taskDao.getTaskById(taskId);
     }
 
-    // Room doesn't allow database writes on the main thread
-    // so these run on a background thread instead
     public void insert(Task task) {
         executor.execute(() -> {
             long newId = taskDao.insert(task);
