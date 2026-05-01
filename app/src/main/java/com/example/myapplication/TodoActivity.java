@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -62,6 +63,7 @@ public class TodoActivity extends AppCompatActivity {
         MaterialCardView cardPickEndTime = findViewById(R.id.cardPickEndTime);
         Button btnAdd = findViewById(R.id.btnAdd);
         Button btnExport = findViewById(R.id.btnExport);
+        Button btnImport = findViewById(R.id.btnImport);
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
 
@@ -229,6 +231,14 @@ public class TodoActivity extends AppCompatActivity {
                 return;
             }
             IcsExporter.exportToFile(this, currentTasks);
+        });
+
+        btnImport.setOnClickListener(v -> {
+            // Request code for selecting a ICS file.
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("downloads/ics");
+            IcsImporter.launch(intent);
         });
     }
 
