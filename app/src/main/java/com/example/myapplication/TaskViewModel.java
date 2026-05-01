@@ -14,22 +14,36 @@ public class TaskViewModel extends AndroidViewModel {
         repository = new TaskRepository(application);
     }
 
-    // activities talk to this rather than the repository directly
-    // and it also isn't affected by screen rotation
     public LiveData<List<Task>> getAllTasks() {
         return repository.getAllTasks();
+    }
+
+    public LiveData<List<Task>> getTasksByFolder(String folder) {
+        return repository.getTasksByFolder(folder);
     }
 
     public LiveData<List<Task>> getTasksForDay(long start, long end) {
         return repository.getTasksForDay(start, end);
     }
 
+    public LiveData<List<Task>> getTasksForDayByFolder(long start, long end, String folder) {
+        return repository.getTasksForDayByFolder(start, end, folder);
+    }
+
     public LiveData<List<Task>> getPendingTasks() {
         return repository.getPendingTasks();
     }
 
+    public LiveData<List<Task>> getPendingTasksByFolder(String folder) {
+        return repository.getPendingTasksByFolder(folder);
+    }
+
     public LiveData<List<Task>> getCompletedTasks() {
         return repository.getCompletedTasks();
+    }
+
+    public LiveData<List<Task>> getCompletedTasksByFolder(String folder) {
+        return repository.getCompletedTasksByFolder(folder);
     }
 
     public void insert(Task task) {

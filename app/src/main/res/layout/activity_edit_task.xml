@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
-    <!-- top app bar matching the main page style -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -33,7 +32,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- subtitle -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +41,6 @@
                 style="?attr/textAppearanceBodyLarge"
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
-            <!-- title input card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +57,6 @@
                     android:gravity="center_vertical"
                     android:padding="20dp">
 
-                    <!-- icon -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="52dp"
                         android:layout_height="52dp"
@@ -78,7 +74,6 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- text input -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -98,7 +93,65 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- date picker card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.Material3.CardView.Filled"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="20dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="📁"
+                            android:textSize="24sp"
+                            android:gravity="center" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Task Folder"
+                            android:textColor="?attr/colorOnSurface"
+                            style="?attr/textAppearanceTitleMedium" />
+
+                        <Spinner
+                            android:id="@+id/spinnerEditTaskFolder"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="4dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btnPickDate"
                 android:layout_width="match_parent"
@@ -118,7 +171,6 @@
                     android:gravity="center_vertical"
                     android:padding="20dp">
 
-                    <!-- icon -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="52dp"
                         android:layout_height="52dp"
@@ -136,7 +188,6 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- date text -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -162,7 +213,6 @@
 
                     </LinearLayout>
 
-                    <!-- chevron -->
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -173,7 +223,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- start time picker card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPickStartTime"
                 android:layout_width="match_parent"
@@ -245,7 +294,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- end time picker card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPickEndTime"
                 android:layout_width="match_parent"
@@ -317,7 +365,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- save button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSaveTask"
                 android:layout_width="match_parent"
@@ -327,7 +374,6 @@
                 android:text="Save Changes"
                 style="@style/Widget.Material3.Button" />
 
-            <!-- delete button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDeleteTask"
                 android:layout_width="match_parent"
