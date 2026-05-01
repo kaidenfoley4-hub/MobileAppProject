@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class TodoActivity extends AppCompatActivity {
 
@@ -37,6 +38,7 @@ public class TodoActivity extends AppCompatActivity {
     private TextView tvSelectedEndTime;
     private Spinner spinnerTaskFolder;
     private Spinner spinnerFilterFolder;
+    private Spinner spinnerRecurrenceFrequency;
     private TaskViewModel taskViewModel;
 
     private TaskAdapter pendingAdapter;
@@ -52,6 +54,7 @@ public class TodoActivity extends AppCompatActivity {
 
     private final String[] taskFolders = {"General", "Study", "Work", "Personal", "Shopping"};
     private final String[] filterFolders = {"All", "General", "Study", "Work", "Personal", "Shopping"};
+    private final String[] recurrenceFrequencies = {"None", "Weekly", "Biweekly", "Monthly"};
 
     private long selectedDateMillis = -1;
     private long selectedStartTimeMillis = -1;
@@ -70,6 +73,7 @@ public class TodoActivity extends AppCompatActivity {
         tvSelectedEndTime = findViewById(R.id.tvSelectedEndTime);
         spinnerTaskFolder = findViewById(R.id.spinnerTaskFolder);
         spinnerFilterFolder = findViewById(R.id.spinnerFilterFolder);
+        spinnerRecurrenceFrequency = findViewById(R.id.spinnerRecurrenceFrequency);
 
         ListView pendingListView = findViewById(R.id.listViewPendingTasks);
         ListView completedListView = findViewById(R.id.listViewCompletedTasks);
@@ -105,6 +109,16 @@ public class TodoActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedFolder = parent.getItemAtPosition(position).toString();
                 observeTasks(selectedFolder, pendingListView, completedListView);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spinnerRecurrenceFrequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             }
 
             @Override
@@ -206,6 +220,7 @@ public class TodoActivity extends AppCompatActivity {
                     : selectedStartTimeMillis + 3600000;
 
             Task task = new Task(title, "", "", selectedStartTimeMillis, endMillis, selectedFolder);
+            applyRecurrenceSelection(task, selectedStartTimeMillis);
             taskViewModel.insert(task);
 
             editTask.setText("");
@@ -216,6 +231,7 @@ public class TodoActivity extends AppCompatActivity {
             selectedStartTimeMillis = -1;
             selectedEndTimeMillis = -1;
             spinnerTaskFolder.setSelection(0);
+            spinnerRecurrenceFrequency.setSelection(0);
         });
 
         pendingListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -258,6 +274,30 @@ public class TodoActivity extends AppCompatActivity {
         ArrayAdapter<String> filterFolderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, filterFolders);
         filterFolderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFilterFolder.setAdapter(filterFolderAdapter);
+
+        ArrayAdapter<String> recurrenceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, recurrenceFrequencies);
+        recurrenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRecurrenceFrequency.setAdapter(recurrenceAdapter);
+    }
+
+    private void applyRecurrenceSelection(Task task, long startTime) {
+        int frequencyIndex = spinnerRecurrenceFrequency.getSelectedItemPosition();
+        if (frequencyIndex == 0) {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
+            task.recurrenceInterval = 1;
+            return;
+        }
+
+        if (frequencyIndex == 1) {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_WEEKLY;
+            task.recurrenceInterval = 1;
+        } else if (frequencyIndex == 2) {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_WEEKLY;
+            task.recurrenceInterval = 2;
+        } else {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_MONTHLY;
+            task.recurrenceInterval = 1;
+        }
     }
 
     private void observeTasks(String folder, ListView pendingListView, ListView completedListView) {
@@ -284,17 +324,23 @@ public class TodoActivity extends AppCompatActivity {
         }
 
         pendingTasksLiveData.observe(this, tasks -> {
-            pendingTasks = tasks;
+            long windowStart = System.currentTimeMillis();
+            long windowEnd = windowStart + TimeUnit.DAYS.toMillis(7L * RecurrenceUtils.DEFAULT_WINDOW_WEEKS);
+            List<Task> displayTasks = RecurrenceUtils.expandWeeklyOccurrences(tasks, windowStart, windowEnd);
+            pendingTasks = displayTasks;
             pendingAdapter.clear();
-            pendingAdapter.addAll(tasks);
+            pendingAdapter.addAll(displayTasks);
             pendingAdapter.notifyDataSetChanged();
             setListViewHeightBasedOnChildren(pendingListView);
         });
 
         completedTasksLiveData.observe(this, tasks -> {
-            completedTasks = tasks;
+            long windowStart = System.currentTimeMillis();
+            long windowEnd = windowStart + TimeUnit.DAYS.toMillis(7L * RecurrenceUtils.DEFAULT_WINDOW_WEEKS);
+            List<Task> displayTasks = RecurrenceUtils.expandWeeklyOccurrences(tasks, windowStart, windowEnd);
+            completedTasks = displayTasks;
             completedAdapter.clear();
-            completedAdapter.addAll(tasks);
+            completedAdapter.addAll(displayTasks);
             completedAdapter.notifyDataSetChanged();
             setListViewHeightBasedOnChildren(completedListView);
         });

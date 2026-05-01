@@ -130,7 +130,15 @@ public class IcsImporter {
         }
 
         boolean isCompleted = "COMPLETED".equalsIgnoreCase(props.get("STATUS"));
-        return new Task(title, description, location, start, end, isCompleted, uid, "General");
+        Task task = new Task(title, description, location, start, end, isCompleted, uid, "General");
+
+        RecurrenceRule rule = parseRrule(props.get("RRULE"));
+        if (rule != null && !RecurrenceUtils.FREQ_NONE.equals(rule.frequency)) {
+            task.recurrenceFrequency = rule.frequency;
+            task.recurrenceInterval = rule.interval;
+        }
+
+        return task;
     }
 
     private static Long parseDateTime(String value, Map<String, String> params) {
@@ -177,5 +185,42 @@ public class IcsImporter {
                 .replace("\\,", ",")
                 .replace("\\;", ";")
                 .replace("\\\\", "\\");
+    }
+
+    private static RecurrenceRule parseRrule(String rrule) {
+        if (rrule == null || rrule.trim().isEmpty()) {
+            return null;
+        }
+
+        String[] parts = rrule.toUpperCase(Locale.US).split(";");
+        String frequency = RecurrenceUtils.FREQ_NONE;
+        int interval = 1;
+
+        for (String part : parts) {
+            if (part.startsWith("FREQ=")) {
+                String value = part.substring("FREQ=".length());
+                if ("WEEKLY".equals(value)) {
+                    frequency = RecurrenceUtils.FREQ_WEEKLY;
+                } else if ("MONTHLY".equals(value)) {
+                    frequency = RecurrenceUtils.FREQ_MONTHLY;
+                }
+            } else if (part.startsWith("INTERVAL=")) {
+                try {
+                    interval = Integer.parseInt(part.substring("INTERVAL=".length()));
+                } catch (NumberFormatException ignored) {
+                    interval = 1;
+                }
+            }
+        }
+
+        RecurrenceRule rule = new RecurrenceRule();
+        rule.frequency = frequency;
+        rule.interval = Math.max(interval, 1);
+        return rule;
+    }
+
+    private static final class RecurrenceRule {
+        private String frequency;
+        private int interval;
     }
 }

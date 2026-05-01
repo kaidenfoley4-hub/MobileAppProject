@@ -28,6 +28,7 @@ public class EditActivity extends AppCompatActivity {
     private TextView tvSelectedStartTime;
     private TextView tvSelectedEndTime;
     private Spinner spinnerEditTaskFolder;
+    private Spinner spinnerRecurrenceFrequency;
     private TaskViewModel taskViewModel;
 
     private final SimpleDateFormat dateFormat =
@@ -36,6 +37,7 @@ public class EditActivity extends AppCompatActivity {
             new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     private final String[] taskFolders = {"General", "Study", "Work", "Personal", "Shopping"};
+    private final String[] recurrenceFrequencies = {"None", "Weekly", "Biweekly", "Monthly"};
 
     private Task currentTask;
     private long selectedDateMillis = -1;
@@ -56,6 +58,7 @@ public class EditActivity extends AppCompatActivity {
         tvSelectedStartTime = findViewById(R.id.tvSelectedStartTime);
         tvSelectedEndTime = findViewById(R.id.tvSelectedEndTime);
         spinnerEditTaskFolder = findViewById(R.id.spinnerEditTaskFolder);
+        spinnerRecurrenceFrequency = findViewById(R.id.spinnerRecurrenceFrequency);
 
         MaterialCardView btnPickDate = findViewById(R.id.btnPickDate);
         MaterialCardView cardPickStartTime = findViewById(R.id.cardPickStartTime);
@@ -64,6 +67,7 @@ public class EditActivity extends AppCompatActivity {
         Button btnDelete = findViewById(R.id.btnDeleteTask);
 
         setupFolderSpinner();
+        setupRecurrenceSpinners();
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
 
@@ -83,6 +87,7 @@ public class EditActivity extends AppCompatActivity {
                 selectedEndTimeMillis = task.endTime;
                 selectedDateMillis = startOfDay(task.startTime);
                 setFolderSelection(task.folder);
+                setRecurrenceSelection(task);
                 updateDateLabel();
                 updateTimeLabels();
             }
@@ -240,6 +245,7 @@ public class EditActivity extends AppCompatActivity {
             currentTask.startTime = selectedStartTimeMillis;
             currentTask.endTime = resolvedEndTime;
             currentTask.folder = selectedFolder;
+            applyRecurrenceSelection(currentTask, selectedStartTimeMillis);
 
             taskViewModel.update(currentTask);
 
@@ -263,25 +269,57 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void setupFolderSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, taskFolders);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, taskFolders);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEditTaskFolder.setAdapter(adapter);
     }
 
-    private void setFolderSelection(String folder) {
-        if (folder == null || folder.trim().isEmpty()) {
-            spinnerEditTaskFolder.setSelection(0);
-            return;
-        }
+    private void setupRecurrenceSpinners() {
+        ArrayAdapter<String> recurrenceAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, recurrenceFrequencies);
+        recurrenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRecurrenceFrequency.setAdapter(recurrenceAdapter);
+    }
 
+    private void setRecurrenceSelection(Task task) {
+        int frequencyIndex = 0;
+        if (RecurrenceUtils.FREQ_WEEKLY.equals(task.recurrenceFrequency)) {
+            frequencyIndex = task.recurrenceInterval >= 2 ? 2 : 1;
+        } else if (RecurrenceUtils.FREQ_MONTHLY.equals(task.recurrenceFrequency)) {
+            frequencyIndex = 3;
+        }
+        spinnerRecurrenceFrequency.setSelection(frequencyIndex);
+    }
+
+    private void setFolderSelection(String folder) {
         for (int i = 0; i < taskFolders.length; i++) {
             if (taskFolders[i].equals(folder)) {
                 spinnerEditTaskFolder.setSelection(i);
                 return;
             }
         }
-
         spinnerEditTaskFolder.setSelection(0);
+    }
+
+    private void applyRecurrenceSelection(Task task, long startTime) {
+        int frequencyIndex = spinnerRecurrenceFrequency.getSelectedItemPosition();
+        if (frequencyIndex == 0) {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
+            task.recurrenceInterval = 1;
+            return;
+        }
+
+        if (frequencyIndex == 1) {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_WEEKLY;
+            task.recurrenceInterval = 1;
+        } else if (frequencyIndex == 2) {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_WEEKLY;
+            task.recurrenceInterval = 2;
+        } else {
+            task.recurrenceFrequency = RecurrenceUtils.FREQ_MONTHLY;
+            task.recurrenceInterval = 1;
+        }
     }
 
     private void updateDateLabel() {

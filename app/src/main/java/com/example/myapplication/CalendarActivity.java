@@ -103,27 +103,25 @@ public class CalendarActivity extends AppCompatActivity {
         // this converts the calendar objects into long millisecond timestamps which are passed onto the ViewModel,
         // , which passes onto the Repository, which passes onto the DAO which runs the SQL query
         // the result is stored in currentLiveData which can be removed the next time the method runs
-        currentLiveData = taskViewModel.getTasksForDay(
-                start.getTimeInMillis(),
-                end.getTimeInMillis()
-        );
+        currentLiveData = taskViewModel.getAllTasks();
 
         // this registers the observer. "this" ties it to the activity so it automatically stops when the activity does.
 
         currentLiveData.observe(this, tasks -> {
-            currentTasks = tasks;
+            List<Task> dayTasks = RecurrenceUtils.filterTasksForDay(tasks, start.getTimeInMillis(), end.getTimeInMillis());
+            currentTasks = dayTasks;
             // wipes the current list before repopulating it, to prevent duplicates
             adapter.clear();
 
             // view.visible and view.gone toggle the visibility of the list and the empty message
-            if (tasks.isEmpty()) {
+            if (dayTasks.isEmpty()) {
                 tvNoTasks.setVisibility(View.VISIBLE);
                 listViewTasks.setVisibility(View.GONE);
             } else {
                 tvNoTasks.setVisibility(View.GONE);
                 listViewTasks.setVisibility(View.VISIBLE);
                 // this checks the isCompleted field on each task and add a tick or bullet point to the title. This isnt implemented yet so it isnt used
-                for (Task t : tasks) {
+                for (Task t : dayTasks) {
                     String status = t.isCompleted ? "✓ " : "• ";
                     adapter.add(status + t.title);
                 }

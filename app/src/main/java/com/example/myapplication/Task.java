@@ -21,6 +21,11 @@ public class Task {
 
     public String folder;
 
+    public String recurrenceFrequency;
+    public int recurrenceInterval;
+    public long recurrenceEndTime;
+
+
     public Task(String title, String description, String location,
                 long startTime, long endTime, boolean isCompleted, String uid, String folder) {
         this.title = title;
@@ -31,6 +36,9 @@ public class Task {
         this.isCompleted = isCompleted;
         this.uid = uid;
         this.folder = folder;
+        this.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
+        this.recurrenceInterval = 1;
+        this.recurrenceEndTime = -1L;
     }
 
 
@@ -45,6 +53,9 @@ public class Task {
         this.isCompleted = false;
         this.uid = java.util.UUID.randomUUID().toString();
         this.folder = folder;
+        this.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
+        this.recurrenceInterval = 1;
+        this.recurrenceEndTime = -1L;
     }
 
 
@@ -59,6 +70,9 @@ public class Task {
         this.isCompleted = false;
         this.uid = java.util.UUID.randomUUID().toString();
         this.folder = "General";
+        this.recurrenceFrequency = RecurrenceUtils.FREQ_NONE;
+        this.recurrenceInterval = 1;
+        this.recurrenceEndTime = -1L;
     }
 
     public int getId() {
