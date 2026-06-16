@@ -4,7 +4,12 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Blue gradient background for launcher icon -->
     <path
-        android:fillColor="#E6ECF9"
+        android:fillColor="#1A6FD4"
         android:pathData="M0,0h108v108h-108z" />
+    <!-- Subtle lighter blue overlay for depth -->
+    <path
+        android:fillColor="#2B80E8"
+        android:pathData="M0,0 Q54,0 108,54 L108,0 Z" />
 </vector>

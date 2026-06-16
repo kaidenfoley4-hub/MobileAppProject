@@ -57,15 +57,25 @@ public final class TaskReminderScheduler {
         }
 
         long leadMinutes = NotificationPreferenceManager.getLeadTimeMinutes(appContext);
-        long triggerAtMillis = task.startTime - TimeUnit.MINUTES.toMillis(leadMinutes);
         long now = System.currentTimeMillis();
+        long scheduledStart = task.startTime;
+        if (RecurrenceUtils.isRecurring(task)) {
+            long target = now + TimeUnit.MINUTES.toMillis(leadMinutes);
+            scheduledStart = RecurrenceUtils.computeNextOccurrence(task, target);
+            if (scheduledStart <= 0L) {
+                cancelReminder(appContext, task);
+                return;
+            }
+        }
+
+        long triggerAtMillis = scheduledStart - TimeUnit.MINUTES.toMillis(leadMinutes);
         if (triggerAtMillis <= now) {
             // ignore anything already in the past so we do not spam old tasks
             cancelReminder(appContext, task);
             return;
         }
 
-        PendingIntent pendingIntent = buildPendingIntent(appContext, task);
+        PendingIntent pendingIntent = buildPendingIntent(appContext, task, scheduledStart);
         AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) {
             return;
@@ -95,7 +105,7 @@ public final class TaskReminderScheduler {
             return;
         }
         Context appContext = context.getApplicationContext();
-        PendingIntent pendingIntent = buildPendingIntent(appContext, task);
+        PendingIntent pendingIntent = buildPendingIntent(appContext, task, task.startTime);
         AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.cancel(pendingIntent);
@@ -119,12 +129,12 @@ public final class TaskReminderScheduler {
         });
     }
 
-    private static PendingIntent buildPendingIntent(Context context, Task task) {
+    private static PendingIntent buildPendingIntent(Context context, Task task, long startTime) {
         Intent intent = new Intent(context, TaskReminderReceiver.class);
         intent.setAction("com.example.myapplication.ACTION_TASK_REMINDER_" + computeRequestCode(task));
         intent.putExtra(TaskReminderReceiver.EXTRA_TASK_ID, task.id);
         intent.putExtra(TaskReminderReceiver.EXTRA_TASK_TITLE, task.title);
-        intent.putExtra(TaskReminderReceiver.EXTRA_TASK_START, task.startTime);
+        intent.putExtra(TaskReminderReceiver.EXTRA_TASK_START, startTime);
         intent.putExtra(TaskReminderReceiver.EXTRA_NOTIFICATION_ID, computeRequestCode(task));
 
         int requestCode = computeRequestCode(task);

@@ -25,29 +25,37 @@ public class IcsExporter {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        sb.append("BEGIN:VCALENDAR\n");
-        sb.append("VERSION:2.0\n");
-        sb.append("PRODID:-//MyCalendarApp//EN\n");
+        SimpleDateFormat stampFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.getDefault());
+        stampFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dtStamp = stampFormat.format(new Date());
+
+        sb.append("BEGIN:VCALENDAR\r\n");
+        sb.append("VERSION:2.0\r\n");
+        sb.append("PRODID:-//MyCalendarApp//EN\r\n");
+        sb.append("CALSCALE:GREGORIAN\r\n");
 
         for (Task task : tasks) {
-            sb.append("BEGIN:VEVENT\n");
+            sb.append("BEGIN:VEVENT\r\n");
 
             // uid makes sure outlook doesn't make duplicates if we export twice
-            sb.append("UID:").append(task.uid).append("\n");
-            sb.append("SUMMARY:").append(task.title).append("\n");
-            sb.append("DESCRIPTION:").append(
-                    task.description != null ? task.description : "").append("\n");
+            sb.append(foldLine("UID:" + safeValue(task.uid))).append("\r\n");
+            sb.append(foldLine("DTSTAMP:" + dtStamp)).append("\r\n");
+            sb.append(foldLine("SUMMARY:" + safeValue(task.title))).append("\r\n");
             // description and location may be empty so fall back to blank strings
-            sb.append("LOCATION:").append(
-                    task.location != null ? task.location : "").append("\n");
-            sb.append("DTSTART:").append(sdf.format(new Date(task.startTime))).append("\n");
-            sb.append("DTEND:").append(sdf.format(new Date(task.endTime))).append("\n");
-            sb.append("STATUS:").append(
-                    task.isCompleted ? "COMPLETED" : "CONFIRMED").append("\n");
-            sb.append("END:VEVENT\n");
+            sb.append(foldLine("DESCRIPTION:" + safeValue(task.description))).append("\r\n");
+            sb.append(foldLine("LOCATION:" + safeValue(task.location))).append("\r\n");
+            sb.append("DTSTART:").append(sdf.format(new Date(task.startTime))).append("\r\n");
+            sb.append("DTEND:").append(sdf.format(new Date(task.endTime))).append("\r\n");
+            if (RecurrenceUtils.isRecurring(task)) {
+                int interval = Math.max(task.recurrenceInterval, 1);
+                String rrule = "RRULE:FREQ=" + task.recurrenceFrequency + ";INTERVAL=" + interval;
+                sb.append(foldLine(rrule)).append("\r\n");
+            }
+            sb.append("STATUS:").append(task.isCompleted ? "COMPLETED" : "CONFIRMED").append("\r\n");
+            sb.append("END:VEVENT\r\n");
         }
 
-        sb.append("END:VCALENDAR");
+        sb.append("END:VCALENDAR\r\n");
         return sb.toString();
     }
 
@@ -81,5 +89,36 @@ public class IcsExporter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String safeValue(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value
+                .replace("\\", "\\\\")
+                .replace(";", "\\;")
+                .replace(",", "\\,")
+                .replace("\r\n", "\\n")
+                .replace("\n", "\\n");
+    }
+
+    private static String foldLine(String line) {
+        if (line.length() <= 75) {
+            return line;
+        }
+
+        StringBuilder folded = new StringBuilder();
+        int index = 0;
+        while (index < line.length()) {
+            int next = Math.min(index + 75, line.length());
+            if (index == 0) {
+                folded.append(line, index, next);
+            } else {
+                folded.append("\r\n ").append(line, index, next);
+            }
+            index = next;
+        }
+        return folded.toString();
     }
 }
